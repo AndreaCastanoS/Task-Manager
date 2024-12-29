@@ -43,7 +43,7 @@ const controller = {
     query("status")
       .optional()
       .isIn(["completed", "pending"])
-      .withMessage("Invalid statusssss value. Use 'completed' or 'pending'."),
+      .withMessage("Invalid status value. Use 'completed' or 'pending'."),
 
     async (req, res) => {
       const errors = validationResult(req);
@@ -59,7 +59,7 @@ const controller = {
         const filter = {};
 
         if (status) {
-          filter.status = status === "completed"; 
+          filter.status = status === "completed";
         }
 
         const tasks = await Task.find(filter);
@@ -87,7 +87,7 @@ const controller = {
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          errors: errors.array(), 
+          errors: errors.array(),
         });
       }
 
@@ -120,10 +120,8 @@ const controller = {
     param("id").isMongoId().withMessage("Invalid task ID format."),
     body("title")
       .optional()
-      .notEmpty()
-      .withMessage("Title must not be empty.")
-      .isLength({ min: 3 })
-      .withMessage("Title must be at least 3 characters long."),
+          .isLength({ min: 3 })
+          .withMessage("Title must be at least 3 characters long."),
     body("description")
       .optional()
       .isString()
@@ -176,8 +174,7 @@ const controller = {
 
   destroy: [
     param("id").isMongoId().withMessage("Invalid task ID format."),
-
-    async (req, res, next) => {
+    async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -185,10 +182,7 @@ const controller = {
           errors: errors.array(),
         });
       }
-      next();
-    },
 
-    async (req, res) => {
       try {
         const { id } = req.params;
 

@@ -5,6 +5,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('./config/database')
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swaggerConfig"); 
 
 var indexRouter = require('./routes/index');
 
@@ -22,6 +24,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
+  console.log("Swagger Docs available at http://localhost:3000/api-docs");
+});
 
 
 // catch 404 and forward to error handler
