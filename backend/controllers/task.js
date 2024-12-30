@@ -22,8 +22,8 @@ const controller = {
       }
 
       try {
-        const { title, description } = req.body;
-        const newTask = await Task.create({ title, description });
+        const { title, description, status } = req.body;
+        const newTask = await Task.create({ title, description, status });
         res.status(201).json({
           success: true,
           message: "The task was successfully created.",
