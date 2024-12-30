@@ -8,27 +8,26 @@ import NewTask from "../NewTask";
 import { motion } from "framer-motion";
 
 const TaskBoard = () => {
-  const { tasks, fetchTasks } = useTaskContext(); // Asegúrate de desestructurar correctamente `tasks` y `fetchTasks`
+  const { tasks, fetchTasks } = useTaskContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Obtener el valor de "status" de los parámetros de la URL
   const getQueryParams = () => {
     const params = new URLSearchParams(location.search);
     return params.get("status");
   };
 
   useEffect(() => {
-    const status = getQueryParams(); // Obtener el filtro de status de la URL
-    fetchTasks(status); // Cargar las tareas filtradas según el estado
-  }, [location.search]); // Dependencia en `location.search` para actualizar en tiempo real
+    const status = getQueryParams();
+    fetchTasks(status);
+  }, [location.search]);
 
   const handleFilterChange = (filterStatus) => {
     if (filterStatus) {
-      navigate(`?status=${filterStatus}`); // Cambiar el estado con el filtro y actualizar la URL
+      navigate(`?status=${filterStatus}`);
     } else {
-      navigate("/", { replace: true }); // Quitar el filtro
+      navigate("/", { replace: true });
     }
   };
 
@@ -54,13 +53,18 @@ const TaskBoard = () => {
             <NewTask />
           </Modal>
         </div>
-        <div className="flex justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-center"
+        >
           <TaskList
-            tasks={tasks} // Asegúrate de que `tasks` esté siendo bien pasado desde el contexto
+            tasks={tasks}
             title="Tareas por Hacer"
             emptyMessage="No hay tareas pendientes."
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );
