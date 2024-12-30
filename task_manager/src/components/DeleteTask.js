@@ -21,18 +21,18 @@ const ConfirmDeleteAlert = ({ task, close }) => {
 
         <div className="flex justify-end space-x-4">
           <button
+            onClick={handleDeleteClick}
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          >
+            Aceptar
+          </button>
+          <button
             onClick={close}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
           >
             Cancelar
           </button>
 
-          <button
-            onClick={handleDeleteClick}
-            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-          >
-            Aceptar
-          </button>
         </div>
       </div>
     </div>

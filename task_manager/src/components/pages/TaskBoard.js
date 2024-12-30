@@ -1,16 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTaskContext } from "../../context/TaskContext";
 import TaskList from "../TaskList";
 import Modal from "../ModalTask";
 import FilterTask from "../FilterTask";
 import NewTask from "../NewTask";
+import { motion } from "framer-motion";
 
 const TaskBoard = () => {
-  const tasks = useTaskContext();
+  const { tasks, fetchTasks } = useTaskContext(); // Asegúrate de desestructurar correctamente `tasks` y `fetchTasks`
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Obtener el valor de "status" de los parámetros de la URL
+  const getQueryParams = () => {
+    const params = new URLSearchParams(location.search);
+    return params.get("status");
+  };
+
+  useEffect(() => {
+    const status = getQueryParams(); // Obtener el filtro de status de la URL
+    fetchTasks(status); // Cargar las tareas filtradas según el estado
+  }, [location.search]); // Dependencia en `location.search` para actualizar en tiempo real
 
   const handleFilterChange = (filterStatus) => {
-    tasks.fetchTasks(filterStatus);
+    if (filterStatus) {
+      navigate(`?status=${filterStatus}`); // Cambiar el estado con el filtro y actualizar la URL
+    } else {
+      navigate("/", { replace: true }); // Quitar el filtro
+    }
   };
 
   return (
@@ -37,7 +56,7 @@ const TaskBoard = () => {
         </div>
         <div className="flex justify-center">
           <TaskList
-            tasks={tasks.tasks}
+            tasks={tasks} // Asegúrate de que `tasks` esté siendo bien pasado desde el contexto
             title="Tareas por Hacer"
             emptyMessage="No hay tareas pendientes."
           />

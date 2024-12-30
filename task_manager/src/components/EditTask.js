@@ -63,7 +63,7 @@ const EditTaskForm = ({ task }) => {
       {message && (
         <p
           className={`text-center ${
-            message.includes("¡Tarea editada")
+            message.includes("¡Tarea guardada")
               ? "text-green-600"
               : "text-red-600"
           } italic`}

@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion"; // Importar para la animación
 import TaskActions from "./TaskActions";
 import { useTaskContext } from "../context/TaskContext";
 
@@ -14,7 +15,11 @@ const TaskItem = ({ task }) => {
   };
 
   return (
-    <div className="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg flex justify-between items-center">
+    <motion.div
+      className="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg flex justify-between items-center"
+      whileHover={{ scale: 1.05 }} // Animación al pasar el mouse
+      transition={{ duration: 0.2 }}
+    >
       <div>
         <h3 className="font-bold text-lg text-gray-800 truncate">
           {task.title}
@@ -27,9 +32,7 @@ const TaskItem = ({ task }) => {
             className="form-checkbox text-green-500"
           />
           <p
-            className={`text-xs font-medium ${
-              task.status ? "text-green-500" : "text-red-500"
-            }`}
+            className={`text-xs font-medium ${task.status ? "text-green-500" : "text-red-500"}`}
           >
             {task.status ? "Completada" : "Pendiente"}
           </p>
@@ -39,7 +42,7 @@ const TaskItem = ({ task }) => {
         </p>
       </div>
       <TaskActions task={task} />
-    </div>
+    </motion.div>
   );
 };
 
