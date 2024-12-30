@@ -8,16 +8,15 @@ export const TaskProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Función para cargar las tareas
   const fetchTasks = async (status) => {
     setLoading(true);
     setError(null);
-  
+
     try {
       const url = status
         ? `http://localhost:8000/api/tasks?status=${status}`
         : "http://localhost:8000/api/tasks";
-  
+
       const response = await axios.get(url);
       setTasks(response.data.response);
     } catch (err) {
@@ -30,31 +29,90 @@ export const TaskProvider = ({ children }) => {
 
   const createTask = async ({ title, description }) => {
     try {
-      const response = await fetch('http://localhost:8000/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, description }),
+      const response = await axios.post("http://localhost:8000/api/tasks", {
+        title,
+        description,
       });
-  
-      if (!response.ok) {
-        throw new Error('No se pudo crear la tarea');
+
+      if (response.status !== 201) {
+        throw new Error("No se pudo crear la tarea");
       }
-  
-      const data = await response.json();
-      fetchTasks()
-      return data;  
+
+      const newTask = response.data.response;
+
+      fetchTasks();
+
+      return newTask;
     } catch (error) {
-      console.error('Error al crear la tarea:', error);
+      console.error("Error al crear la tarea:", error);
       throw error;
     }
   };
-  
 
+  const updateTask = async (id, updates) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/api/tasks/${id}`,
+        updates
+      );
+      if (response.status !== 200) {
+        throw new Error("No se pudo editar la tarea");
+      }
+
+      const updatedTask = response.data.response;
+
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task._id === id ? updatedTask : task))
+      );
+      return updatedTask;
+    } catch (error) {
+      console.error("Error al editar la tarea:", error);
+      throw error;
+    }
+  };
+
+  const fetchTaskById = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/tasks/${id}`);
+      if (response.status !== 200) {
+        throw new Error("No se pudo recuperar la tarea");
+      }
+      return response.data.response;
+    } catch (error) {
+      console.error("Error al recuperar la tarea:", error);
+      throw error;
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/api/tasks/${id}`
+      );
+      if (response.status !== 200) {
+        throw new Error("No se pudo eliminar la tarea");
+      }
+
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error("Error al eliminar la tarea:", error);
+      throw error;
+    }
+  };
 
   return (
-    <TaskContext.Provider value={{ tasks, loading, error, fetchTasks, createTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        loading,
+        error,
+        fetchTasks,
+        createTask,
+        updateTask,
+        fetchTaskById,
+        deleteTask,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );

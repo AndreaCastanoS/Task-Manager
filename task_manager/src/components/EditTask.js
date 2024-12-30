@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTaskContext } from "../context/TaskContext";
 
-const CreateTaskForm = () => {
-  const { createTask } = useTaskContext();
+const EditTaskForm = ({ task }) => {
+  const { updateTask } = useTaskContext();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title);
+      setDescription(task.description);
+    }
+  }, [task]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,15 +21,16 @@ const CreateTaskForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await createTask({ title, description }); // Llamada API
+      const response = await updateTask(task._id, { title, description });
+      console.log(response);
 
       if (response) {
-        setMessage("¡Tarea creada exitosamente!");
+        setMessage("¡Tarea guardada exitosamente!");
       } else {
-        setMessage("No se pudo crear la tarea. Inténtalo de nuevo.");
+        setMessage("No se pudo editar la tarea. Inténtalo de nuevo.");
       }
     } catch (error) {
-      setMessage("Error al crear la tarea: ");
+      setMessage("Error al editar la tarea");
     } finally {
       setIsSubmitting(false);
     }
@@ -39,7 +47,6 @@ const CreateTaskForm = () => {
           className="w-full p-2 border rounded-md"
           required
         />
-        <p className="text-gray-400">Campo obligatorio</p>
       </div>
       <div>
         <label className="block text-gray-700 font-bold mb-1">
@@ -51,13 +58,12 @@ const CreateTaskForm = () => {
           className="w-full p-2 border rounded-md"
           required
         />
-        <p className="text-gray-400">Ingresa mínimo 15 caracteres</p>
       </div>
 
       {message && (
         <p
           className={`text-center ${
-            message.includes("¡Tarea creada")
+            message.includes("¡Tarea editada")
               ? "text-green-600"
               : "text-red-600"
           } italic`}
@@ -71,10 +77,10 @@ const CreateTaskForm = () => {
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Creando..." : "Crear"}
+        {isSubmitting ? "Guardando..." : "Guardar"}
       </button>
     </form>
   );
 };
 
-export default CreateTaskForm;
+export default EditTaskForm;
