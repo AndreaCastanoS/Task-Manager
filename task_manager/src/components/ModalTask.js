@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion"; // Importar para la animación
+import { motion } from "framer-motion"; 
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;

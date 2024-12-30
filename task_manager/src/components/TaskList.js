@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTaskContext } from "../context/TaskContext";
-import { motion } from "framer-motion"; // Importar para la animación
+import { motion } from "framer-motion"; 
 
 import TaskItem from "./TaskItem";
 

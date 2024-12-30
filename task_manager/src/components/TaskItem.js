@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion"; // Importar para la animación
+import { motion } from "framer-motion"; 
 import TaskActions from "./TaskActions";
 import { useTaskContext } from "../context/TaskContext";
 
@@ -17,7 +17,7 @@ const TaskItem = ({ task }) => {
   return (
     <motion.div
       className="p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg flex justify-between items-center"
-      whileHover={{ scale: 1.05 }} // Animación al pasar el mouse
+      whileHover={{ scale: 1.05 }} 
       transition={{ duration: 0.2 }}
     >
       <div>
